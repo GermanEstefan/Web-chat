@@ -1,66 +1,79 @@
 
-import { Form } from "../../../../components/Form/Form";
-import { Input } from "../../../../components/Input/Input";
+import { useEffect, useState } from "react";
+import { Input } from "../Input/Input";
+import { IsEmailValid, isNameValid, isPasswordValid } from "../../../../helpers/validationsForm";
 import { useForm } from "../../../../hooks/useForm";
-import { UserRegisterCredentials } from "../../interfaces";
+import { UserRegisterCredentials } from "./interfaces";
+import { useNavigate } from "react-router";
+import { StyledContainerForm, StyledForm, StyledFormSpan } from "./StyledForm";
 
 export const FormRegister = () => {
 
-    const {
-        values,
-        handleChange
-    } = useForm<UserRegisterCredentials>({ name: '', email: '', password1: '', password2: '' });
+    const navigate = useNavigate();
 
-    const { name, email, password1, password2 } = values;
+    const { values, handleChange } = useForm<UserRegisterCredentials>({ name: '', email: '', password: '' });
+    const { name, email, password } = values;
 
-    const validateEmail = (value: any) => {
-        if (!(value.includes('@'))) {
-            return { error: true, message: 'Not is a email!' }
+    const [stateOfErrorsInputs, setStateOfErrorsInputs] = useState({ name: true, email: true, password: true });
+    const [disableForm, setDisableForm] = useState(true);
+
+    useEffect(() => {
+        const values = Object.values(stateOfErrorsInputs);
+        if (values.includes(true)) {
+            setDisableForm(true);
+        } else {
+            setDisableForm(false)
         }
-        return { error: false, message: '' }
+    }, [stateOfErrorsInputs])
+
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        console.log(values)
+        alert('Submited')
     }
 
     return (
 
-        <Form
-            titleForm='Register'
-            spanButtonText='Already have an account?'
-            routeToNavigate='/login'
-            valueButton='Register'
-        >
+        <StyledContainerForm>
 
-            <Input
-                validatorFunction={() => { }}
-                titleOfLabel='Name'
-                name="name"
-                onChangeFunction={handleChange}
-                value={name}
-            />
+            <h2>Register</h2>
 
-            <Input
-                validatorFunction={validateEmail}
-                titleOfLabel='Email'
-                name="email"
-                onChangeFunction={handleChange}
-                value={email}
-            />
+            <StyledForm autoComplete="off" onSubmit={handleSubmit}>
 
-            <Input
-                validatorFunction={() => { }}
-                titleOfLabel='Password'
-                name="password1"
-                onChangeFunction={handleChange}
-                value={password1}
-            />
+                <Input
+                    titleOfLabel='Name'
+                    name='name'
+                    onChangeFunction={handleChange}
+                    value={name}
+                    stateOfError={setStateOfErrorsInputs}
+                    validatorFunction={isNameValid}
+                />
 
-            <Input
-                validatorFunction={() => { }}
-                titleOfLabel='Confirm password'
-                name="password2"
-                onChangeFunction={handleChange}
-                value={password2}
-            />
+                <Input
+                    titleOfLabel='Email'
+                    name='email'
+                    validatorFunction={IsEmailValid}
+                    onChangeFunction={handleChange}
+                    value={email}
+                    stateOfError={setStateOfErrorsInputs}
+                />
 
-        </Form>
+                <Input
+                    titleOfLabel='Password'
+                    name='password'
+                    onChangeFunction={handleChange}
+                    value={password}
+                    stateOfError={setStateOfErrorsInputs}
+                    validatorFunction={isPasswordValid}
+                />
+
+                <StyledFormSpan onClick={() => navigate('/login')}>Already have an account?</StyledFormSpan>
+
+                <button type="submit" disabled={disableForm}>Register</button>
+
+            </StyledForm>
+
+        </StyledContainerForm>
     )
 }

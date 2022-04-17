@@ -10,7 +10,7 @@ export const StyledInputContainer = styled.div`
 export const StyledInput = styled.input<propInputStyle>`
     border:none;
     border-radius:3px;
-    border: ${props => props.error == null ? "1px solid black" : (props.error) ? "1px solid red" : "1px solid green"};
+    border: ${props => props.error == null ? "1px solid black" : (props.error) ? "1px solid red" : "1px solid black"};
     
     &:focus{
         outline:none;

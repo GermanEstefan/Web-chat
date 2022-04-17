@@ -1,12 +1,13 @@
 export interface inputComponentProps {
-    validatorFunction: Function
+    validatorFunction: (value: string ) => errorInputModel
+    stateOfError: Function
     titleOfLabel: string
     name: string
     onChangeFunction: Function
     value: string | number
 }
 
-export interface errorInput {
+export interface errorInputModel {
     error: boolean | null
     message: string
 }

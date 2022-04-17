@@ -6,10 +6,9 @@ export interface UserLoginCredentials {
 export interface UserRegisterCredentials {
     name: string
     email: string
-    password1: string
-    password2: string
+    password: string
 }
 
-export interface PropsAuthPage {
+export interface PropsProtectedRoutes {
     isAuth: boolean
 }

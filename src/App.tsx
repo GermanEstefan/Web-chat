@@ -3,11 +3,12 @@ import {
   Routes,
   Route
 } from 'react-router-dom';
-import { AuthPage } from './pages/auth/AuthPage';
+import GlobalStyle from './global-styles/GlobalStyle';
+import AuthPage from './pages/auth';
 import { FormLogin } from './pages/auth/components/Forms/FormLogin';
 import { FormRegister } from './pages/auth/components/Forms/FormRegister';
-import { DashboardPage } from './pages/dashboard/DashboardPage';
-import GlobalStyle from './styled-components/GlobalStyle';
+import ChatPage from './pages/chat';
+
 
 export const App = () => {
 
@@ -18,7 +19,7 @@ export const App = () => {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          {/* Public Route PROTECTED*/}
+
           <Route path='/' element={<AuthPage isAuth={isAuth} />} >
 
             <Route index element={<FormLogin />} />
@@ -27,8 +28,7 @@ export const App = () => {
 
           </Route>
 
-          {/* TODO: Private Route PROTECTED*/}
-          <Route path='/dashboard' element={<DashboardPage />} />
+          <Route path='/chat' element={<ChatPage isAuth={isAuth} />} />
 
         </Routes>
 

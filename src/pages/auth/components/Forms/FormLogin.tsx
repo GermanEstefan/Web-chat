@@ -1,42 +1,68 @@
-import { Form } from "../../../../components/Form/Form";
-import { Input } from "../../../../components/Input/Input"
+import { useEffect, useState } from "react";
+import { Input } from "../Input/Input";
+import { isEmptyField } from "../../../../helpers/validationsForm";
 import { useForm } from "../../../../hooks/useForm"
-import { UserLoginCredentials } from "../../interfaces";
+import { UserLoginCredentials } from "./interfaces";
+import { useNavigate } from "react-router";
+import { StyledContainerForm, StyledForm, StyledFormSpan } from "./StyledForm";
 
 
 export const FormLogin = () => {
 
-    const {
-        values,
-        handleChange
-    } = useForm<UserLoginCredentials>({ email: '', password: '' });
+    const navigate = useNavigate();
 
+    const { values, handleChange } = useForm<UserLoginCredentials>({ email: '', password: '' });
     const { email, password } = values;
 
+    const [stateOfErrorsInputs, setStateOfErrorsInputs] = useState({ email: true, password: true });
+    const [disableForm, setDisableForm] = useState(true);
+
+    useEffect(() => {
+        const values = Object.values(stateOfErrorsInputs);
+        if (values.includes(true)) {
+            setDisableForm(true);
+        } else {
+            setDisableForm(false)
+        }
+    }, [stateOfErrorsInputs])
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        console.log(values)
+        alert('Submited')
+    }
+
     return (
-        <Form
-            titleForm='Login'
-            spanButtonText='Dont have account?'
-            routeToNavigate='/register'
-            valueButton="Login"
-        >
+        <StyledContainerForm>
 
-            <Input
-                validatorFunction={() => { }}
-                titleOfLabel='Email'
-                name="email"
-                onChangeFunction={handleChange}
-                value={email}
-            />
+            <h2>Login</h2>
 
-            <Input
-                validatorFunction={() => { }}
-                titleOfLabel='Password'
-                name="password"
-                onChangeFunction={handleChange}
-                value={password}
-            />
+            <StyledForm autoComplete="off" onSubmit={handleSubmit}>
 
-        </Form>
+                <Input
+                    titleOfLabel='Email'
+                    name="email"
+                    onChangeFunction={handleChange}
+                    value={email}
+                    validatorFunction={isEmptyField}
+                    stateOfError={setStateOfErrorsInputs}
+                />
+
+                <Input
+                    titleOfLabel='Password'
+                    name="password"
+                    onChangeFunction={handleChange}
+                    value={password}
+                    validatorFunction={isEmptyField}
+                    stateOfError={setStateOfErrorsInputs}
+                />
+
+                <StyledFormSpan onClick={() => navigate('/register')}>Dont have account?</StyledFormSpan>
+
+                <button type="submit" disabled={disableForm}>Login</button>
+
+            </StyledForm>
+
+        </StyledContainerForm>
     )
 }
